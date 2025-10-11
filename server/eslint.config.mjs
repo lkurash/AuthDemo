@@ -10,8 +10,7 @@ export default [
     files: ['**/*.js'],
     languageOptions: {
       ecmaVersion: 'latest',
-      // The server code uses CommonJS (require/module.exports)
-      sourceType: 'commonjs',
+      sourceType: 'module',
       globals: { ...globals.node, ...globals.es2024 },
     },
     plugins: { security: pluginSecurity, prettier: pluginPrettier },
