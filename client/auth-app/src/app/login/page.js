@@ -8,8 +8,6 @@ import { ROUTES } from "@/helpers/routs";
 import { useRouter } from "next/navigation";
 import { getUser } from "@/api/user";
 
-export const metadata = { title: "Sign in" };
-
 export default function LoginPage() {
   const router = useRouter();
 
@@ -18,6 +16,7 @@ export default function LoginPage() {
       .then(() => router.replace(ROUTES.WELCOME))
       .catch(() => {});
   }, []);
+
   return (
     <CardBase
       title="Sign in"

@@ -9,15 +9,15 @@ import { ROUTES } from "@/helpers/routs";
 import { useRouter } from "next/navigation";
 import { getUser } from "@/api/user";
 
-export const metadata = { title: "Create account" };
-
 export default function RegisterPage() {
   const router = useRouter();
+
   useEffect(() => {
     getUser()
       .then(() => router.replace(ROUTES.WELCOME))
       .catch(() => {});
   }, []);
+
   return (
     <CardBase
       title="Create account"

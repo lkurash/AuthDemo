@@ -1,7 +1,7 @@
 import express from 'express';
 import rateLimit from 'express-rate-limit';
-import { validateLoginInput, validateRegisterInput } from '../helpers/auth.js';
 import { login, register, logout } from '../controllers/auth.js';
+import { validateLoginInput, validateRegisterInput } from '../helpers/auth.js';
 
 const router = express.Router();
 
