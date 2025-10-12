@@ -28,7 +28,7 @@ export default function LoginForm() {
         return;
       }
       await login(email, password);
-      router.push(ROUTES.HOME);
+      router.push(ROUTES.WELCOME);
     } catch (e) {
       setError({ form: e.message || "Login failed" });
     } finally {

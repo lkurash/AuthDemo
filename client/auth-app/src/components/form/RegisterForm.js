@@ -39,7 +39,7 @@ export default function RegisterForm() {
       }
 
       await register(username, email, password);
-      router.push(ROUTES.HOME);
+      router.push(ROUTES.WELCOME);
     } catch (e) {
       setFormError(e.message || "Register failed");
     } finally {

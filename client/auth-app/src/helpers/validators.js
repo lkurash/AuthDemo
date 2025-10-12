@@ -50,5 +50,5 @@ export const validateRegisterForm = (form) => {
     errors.name = validationNameError;
   }
 
-  return errors;
+  return Object.keys(errors).length ? errors : null;
 };

@@ -9,7 +9,7 @@ export default function Page() {
       <div className="home-actions">
         <Link href={ROUTES.LOGIN}>Sign in</Link>
         <Link href={ROUTES.REGISTER}>Register</Link>
-        <Link href={ROUTES.HOME}>Home</Link>
+        <Link href={ROUTES.WELCOME}>Home</Link>
       </div>
     </div>
   );
