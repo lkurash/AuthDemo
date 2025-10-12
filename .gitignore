@@ -1,0 +1,7 @@
+
+/.vscode
+**/package-lock.json
+
+# Environment files
+server/.env
+client/.env*
