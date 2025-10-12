@@ -2,6 +2,8 @@ import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
+import helmet from 'helmet';
+import csurf from 'csurf';
 import { connectToDatabase, disconnectFromDatabase } from './db.js';
 
 const app = express();
@@ -10,6 +12,7 @@ const PORT = 4000;
 import router from './routes/index.js';
 
 app.use(express.json());
+app.use(helmet());
 app.use(
   cors({
     origin: [
@@ -22,6 +25,32 @@ app.use(
   }),
 );
 app.use(cookieParser());
+
+const csrfProtection = csurf({
+  cookie: {
+    httpOnly: false,
+    sameSite: 'lax',
+    secure: process.env.NODE_ENV === 'production',
+  },
+});
+
+app.use(csrfProtection);
+
+app.use((req, res, next) => {
+  const safeMethod = /^(GET|HEAD|OPTIONS)$/i.test(req.method);
+  if (safeMethod) {
+    try {
+      res.cookie('XSRF-TOKEN', req.csrfToken(), {
+        httpOnly: false,
+        sameSite: 'lax',
+        secure: process.env.NODE_ENV === 'production',
+      });
+    } catch {
+      // ignore
+    }
+  }
+  next();
+});
 
 app.use('/api', router);
 await connectToDatabase();
@@ -48,3 +77,10 @@ process.on('SIGINT', async () => {
 });
 
 startServer(PORT);
+
+app.use((err, req, res, next) => {
+  if (err.code === 'EBADCSRFTOKEN') {
+    return res.status(403).json({ message: 'Invalid CSRF token' });
+  }
+  return res.status(500).json({ message: 'Internal server error' });
+});

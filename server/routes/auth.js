@@ -1,6 +1,6 @@
 import express from 'express';
 import rateLimit from 'express-rate-limit';
-import { validateInput } from '../helpers/auth.js';
+import { validateLoginInput, validateRegisterInput } from '../helpers/auth.js';
 import { login, register, logout } from '../controllers/auth.js';
 
 const router = express.Router();
@@ -12,9 +12,9 @@ const loginLimiter = rateLimit({
   legacyHeaders: false,
 });
 
-router.post('/login', loginLimiter, validateInput, login);
+router.post('/login', loginLimiter, validateLoginInput, login);
 
-router.post('/register', validateInput, register);
+router.post('/register', validateRegisterInput, register);
 
 router.post('/logout', logout);
 

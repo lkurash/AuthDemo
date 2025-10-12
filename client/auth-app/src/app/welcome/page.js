@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { ROUTES } from "@/helpers/routs";
 import { getUser } from "@/api/user";
@@ -16,20 +16,25 @@ export default function HomePage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
 
-  const getUserInfo = async () => {
+  const getUserInfo = useCallback(async () => {
     try {
       const userInfo = await getUser();
       setUser(userInfo);
     } catch (e) {
-      setError(e.message || "Not authorized");
+      const msg = e.message || "Not authorized";
+      if (/unauthorized/i.test(msg) || /forbidden/i.test(msg)) {
+        router.replace(ROUTES.LOGIN);
+        return;
+      }
+      setError(msg);
     } finally {
       setLoading(false);
     }
-  };
+  }, [router]);
 
   useEffect(() => {
     getUserInfo();
-  }, []);
+  }, [getUserInfo]);
 
   const greeting = useMemo(() => {
     const h = new Date().getHours();
@@ -71,14 +76,12 @@ export default function HomePage() {
         <div className="home-hello">
           <div className="pill">{greeting}</div>
           <h1 className="home-title">
-            {user?.username || user?.email}, welcome back
+            {greeting}, {user?.email}
           </h1>
-          <p className="home-subtitle">
-            Signed in as <strong>{user?.email}</strong>
-          </p>
+          <p className="home-subtitle">Welcome to the app</p>
           <div className="home-actions">
             <ButtonBase fill onClick={onLogout}>
-              Sign out
+              Logout
             </ButtonBase>
           </div>
         </div>
