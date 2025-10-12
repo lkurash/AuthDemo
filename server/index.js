@@ -5,12 +5,22 @@ import cookieParser from 'cookie-parser';
 import { connectToDatabase, disconnectFromDatabase } from './db.js';
 
 const app = express();
-const PORT = 3000;
+const PORT = 4000;
 
 import router from './routes/index.js';
 
 app.use(express.json());
-app.use(cors());
+app.use(
+  cors({
+    origin: [
+      'http://localhost:3000',
+      'http://localhost:3001',
+      'http://127.0.0.1:3000',
+      'http://127.0.0.1:3001',
+    ],
+    credentials: true,
+  }),
+);
 app.use(cookieParser());
 
 app.use('/api', router);

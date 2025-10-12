@@ -18,7 +18,10 @@ export const isValidEmail = (email) =>
   typeof email === 'string' && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
 export const isValidPassword = (password) =>
-  typeof password === 'string' && password.trim().length >= 6;
+  typeof password === 'string' &&
+  password.trim().length >= 6 &&
+  /[A-Za-z]/.test(password) &&
+  /\d/.test(password);
 
 export const validateInput = (req, res, next) => {
   const { email, password } = req.body;
@@ -28,7 +31,7 @@ export const validateInput = (req, res, next) => {
   }
 
   if (!isValidPassword(password)) {
-    return res.status(400).json({ message: 'Invalid password format' });
+    return res.status(400).json({ message: 'Invalid password' });
   }
 
   next();

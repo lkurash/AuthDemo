@@ -1,5 +1,6 @@
 import express from 'express';
 import jwt from 'jsonwebtoken';
+import { getMe } from '../controllers/users.js';
 
 const router = express.Router();
 
@@ -18,9 +19,6 @@ router.get('/', isAuth, (req, res) => {
   res.json({ message: 'User list' });
 });
 
-router.get('/me', isAuth, (req, res) => {
-  const userId = req.user.sub;
-  res.json({ message: `User details for user ${userId}` });
-});
+router.get('/me', isAuth, getMe);
 
 export default router;
