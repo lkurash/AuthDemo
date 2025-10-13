@@ -1,6 +1,6 @@
 # AuthDemo — Full‑stack
 
-A small full example of authentication: a Next.js 15 (React 19) client and an Express 5 server with JWT in httpOnly cookie, CSRF protection and tests.
+Example of authentication: a Next.js (React) client and an Express 5 server with JWT in httpOnly cookie, CSRF protection and tests.
 
 ## Brief description
 
