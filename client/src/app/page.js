@@ -1,46 +1,74 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ROUTES } from "@/helpers/routs";
+import { getUser } from "@/api/user";
 
 export default function Page() {
+  const [user, setUser] = useState(null);
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    setLoaded(false);
+    getUser()
+      .then((user) => setUser(user))
+      .catch(() => setUser(null))
+      .finally(() => setLoaded(true));
+  }, []);
+
   return (
-    <div className="home">
-      <section className="home-hero">
-        <div className="home-hello">
-          <span className="pill">Auth demo</span>
-        </div>
-        <h1 className="home-title">Welcome</h1>
-        <p className="home-subtitle">
-          Sign in to continue, or create a new account to try the flow. You can
-          also explore the demo Home screen.
-        </p>
-        <div className="home-actions">
-          <Link className="btn fill" href={ROUTES.LOGIN}>
-            Sign in
-          </Link>
-          <Link className="btn" href={ROUTES.REGISTER}>
-            Create account
-          </Link>
-          <Link className="btn" href={ROUTES.WELCOME}>
-            Welcome
-          </Link>
+    <div className="main container">
+      <section className="hero">
+        <div className="hero-content">
+          <h1 className="welcome-title">Secure authentication made simple</h1>
+          <p className="welcome-subtitle">
+            Try a demo of sign up, sign in, and protected routes. Built with
+            JWT, cookies and clear validation.
+          </p>
+          <div className="welcome-actions">
+            {!loaded ? null : user ? (
+              <>
+                <Link className="btn" href={ROUTES.WELCOME}>
+                  Visit Welcome Page
+                </Link>
+              </>
+            ) : (
+              <>
+                <Link className="btn fill" href={ROUTES.REGISTER}>
+                  Create account
+                </Link>
+                <Link className="btn" href={ROUTES.LOGIN}>
+                  Sign in
+                </Link>
+              </>
+            )}
+          </div>
         </div>
       </section>
-
-      <section className="home-grid" aria-label="Quick overview">
+      <article className="tile">
+        <h3>How to explore</h3>
+        <div className="list">
+          <div>1. Register an account</div>
+          <div>2. Sign in and visit the Welcome page</div>
+          <div>3. Inspect protected API responses</div>
+        </div>
+      </article>
+      <section className="features">
         <article className="tile tile-accent">
-          <h3>Why this project</h3>
+          <h3>What you get</h3>
           <div className="list">
-            <div>• Simple auth with JWT + cookies</div>
-            <div>• Clean forms with validation</div>
-            <div>• Server + client tests</div>
+            <div>• Simple and secure auth flow</div>
+            <div>• Server and client validation</div>
+            <div>• Tests and example routes</div>
           </div>
         </article>
         <article className="tile">
-          <h3>Next steps</h3>
+          <h3>Tech</h3>
           <div className="list">
-            <div>1. Sign in or register</div>
-            <div>2. Visit Home page</div>
-            <div>3. Explore protected routes</div>
+            <div>• React</div>
+            <div>• Node + Express</div>
+            <div>• JWT + cookies</div>
           </div>
         </article>
       </section>

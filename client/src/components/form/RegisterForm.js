@@ -31,7 +31,6 @@ export default function RegisterForm() {
       const username = String(form.get("name"));
       const email = String(form.get("email"));
       const password = String(form.get("password"));
-      console.log(33);
 
       await register(username, email, password);
       router.push(ROUTES.WELCOME);
@@ -85,7 +84,7 @@ export default function RegisterForm() {
         name="confirm"
         placeholder="••••••••"
       />
-
+      <div className="error-form">{formError && <>{formError}</>}</div>
       <ButtonBase loading={loading} fill type="submit">
         Create account
       </ButtonBase>
