@@ -1,12 +1,6 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import UserModel from '../models/user.js';
-import {
-  AuthenticatedError,
-  EmailInUseError,
-  InvalidCredentialsError,
-  UserNotFoundError,
-} from './errors.js';
 
 export default class UserService {
   constructor(deps = {}) {
@@ -15,10 +9,10 @@ export default class UserService {
 
   async login({ email, password }) {
     const user = await this.UserModel.findOne({ email }).lean();
-    if (!user) return { isError: true, error: new UserNotFoundError() };
+    if (!user) return { isError: true, error: 404, message: 'User not found' };
 
     const match = await this.passwordCompare(password, user.passwordHash);
-    if (!match) return { isError: true, error: new InvalidCredentialsError() };
+    if (!match) return { isError: true, error: 401, message: 'Invalid credentials' };
 
     const token = this.createToken(user);
     return { isSuccess: true, token, user: { id: String(user._id), email: user.email } };
@@ -26,7 +20,7 @@ export default class UserService {
 
   async register({ username, email, password }) {
     const existing = await this.UserModel.findOne({ email }).lean();
-    if (existing) return { isError: true, error: new EmailInUseError() };
+    if (existing) return { isError: true, error: 409, message: 'Email in use' };
 
     const user = await this.createUser({ username, email, password });
     const token = this.createToken(user);
@@ -41,9 +35,9 @@ export default class UserService {
   }
 
   async getUserById(userId) {
-    if (!userId) return { isError: true, error: new AuthenticatedError() };
+    if (!userId) return { isError: true, error: 401, message: 'Unauthorized' };
     const user = await this.UserModel.findById(userId).lean();
-    if (!user) return { isError: true, error: new UserNotFoundError() };
+    if (!user) return { isError: true, error: 404, message: 'User not found' };
     return { isSuccess: true, user };
   }
 

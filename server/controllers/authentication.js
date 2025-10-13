@@ -1,5 +1,4 @@
 import { getAuthCookieOptions } from '../helpers/cookies.js';
-import { EmailInUseError, InvalidCredentialsError, UserNotFoundError } from '../services/errors.js';
 import UserService from '../services/userService.js';
 
 export const login = async (req, res) => {
@@ -14,13 +13,8 @@ export const login = async (req, res) => {
   }
 
   if (result.isError) {
-    const { error } = result;
-    if (error instanceof UserNotFoundError) {
-      return res.status(404).json({ message: 'User not found' });
-    }
-    if (error instanceof InvalidCredentialsError) {
-      return res.status(401).json({ message: 'Invalid credentials' });
-    }
+    const { error, message } = result;
+    return res.status(error).json({ message });
   }
 
   return res.status(500).json({ message: 'Internal server error' });
@@ -37,10 +31,8 @@ export const register = async (req, res) => {
   }
 
   if (result.isError) {
-    const { error } = result;
-    if (error instanceof EmailInUseError) {
-      return res.status(409).json({ message: 'Email already in use' });
-    }
+    const { error, message } = result;
+    return res.status(error).json({ message });
   }
 
   return res.status(500).json({ message: 'Internal server error' });
