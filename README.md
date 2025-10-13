@@ -1,4 +1,4 @@
-# Login — Full‑stack Auth Demo (Next.js 15 + Express 5)
+# AuthDemo — Full‑stack
 
 A small full example of authentication: a Next.js 15 (React 19) client and an Express 5 server with JWT in httpOnly cookie, CSRF protection and tests.
 
@@ -13,80 +13,7 @@ This repository is a ready example of a simple and secure authentication mechani
 
 ## What's inside (key points)
 
-- Client (client/):
-  - app/ — pages (login, welcome).
-  - src/components/ — basic reusable components (Input, Button, Form, Layout).
-  - src/api/ — fetch helpers, CSRF logic, cookie handling.
-
-- Server (server/):
-  - app/ — application configuration, middleware wiring.
-  - controllers/ — route handlers (auth, users).
-  - services/ — user and token business logic.
-  - middleware/ — validation, authentication, error‑handler, rate‑limit.
-  - models/ — Mongoose models (User).
-
-- Tests:
-  - server/tests/ — Vitest + Supertest for main routes.
-  - client/tests/ — unit tests for validators (Vitest).
-
-## Approach and trade-offs
-
-- Chosen: JWT in httpOnly cookie + CSRF for convenient browser auth without manual Authorization header management.
-- Default in‑memory MongoDB simplifies local development and testing (no external dependency).
-- Trade‑offs: focus on clarity and security for a demo, not full scaling for high loads.
-
----
-
-## Quick start (local)
-
-The project includes a script to automatically run client and server:
-```bash
-chmod +x ./start.sh
-./start.sh
-```
-The script:
-1) copies env templates to working `.env` files (if missing),
-2) installs dependencies,
-3) runs server and client (the client is built and started in prod mode).
-
-Defaults:
-- Server: http://localhost:4000
-- Client: http://localhost:3000
-
-### Manual run
-
-1) Prepare env:
-```bash
-cp -n server/.env.example server/.env
-cp -n client/.env.example client/.env.local
-```
-
-2) Install deps:
-```bash
-cd server && npm ci && cd -
-cd client && npm ci && cd -
-```
-
-3) Start server (in a separate terminal):
-```bash
-cd server
-npm run start
-```
-
-4) Start client (another terminal):
-```bash
-cd client
-npm run build
-npm start
-```
-
-For client development mode:
-```bash
-cd client
-npm run dev
-```
-
-## API (short)
+# API (short)
 
 Base prefix: /api
 
@@ -101,13 +28,32 @@ Session: JWT lifetime is 30 minutes; after expiry the user must re-authenticate.
 
 ---
 
-## Security and validation
+# Security and validation
 
 - Passwords are stored only hashed (bcrypt).
 - Validation on the client (email format, password) and on the server (duplicate checks).
 - CSRF protection (csurf + XSRF‑TOKEN), Helmet, rate limiting, CORS configuration.
 
 ---
+
+# Approach and trade-offs
+
+- Chosen: JWT in httpOnly cookie + CSRF for convenient browser auth without manual Authorization header management.
+- Default in‑memory MongoDB simplifies local development and testing (no external dependency).
+
+---
+
+## Quick start (local)
+
+The project includes a script to automatically run client and server:
+```bash
+chmod +x ./start.sh
+./start.sh
+```
+
+Defaults:
+- Server: http://localhost:4000
+- Client: http://localhost:3000
 
 ## Tests
 
