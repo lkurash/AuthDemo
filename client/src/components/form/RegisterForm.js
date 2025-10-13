@@ -17,26 +17,20 @@ import {
 export default function RegisterForm() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const [formError, setFormError] = useState("");
+  const [formError, setFormError] = useState(null);
   const [errors, setErrors] = useState(null);
 
   const onRegister = async (form) => {
     try {
-      const validationError = validateRegisterForm(form);
+      const validationError = await validateRegisterForm(form);
       if (validationError) {
         setErrors(validationError);
-        setLoading(false);
         return;
       }
+
       const username = String(form.get("name"));
       const email = String(form.get("email"));
       const password = String(form.get("password"));
-      const confirmPassword = String(form.get("confirm"));
-
-      if (errors) {
-        setLoading(false);
-        return;
-      }
 
       await register(username, email, password);
       router.push(ROUTES.WELCOME);
@@ -49,9 +43,10 @@ export default function RegisterForm() {
 
   async function onSubmit(e) {
     e.preventDefault();
+    setErrors(null);
+    setFormError(null);
     setLoading(true);
     const form = new FormData(e.currentTarget);
-
     await onRegister(form);
   }
 
