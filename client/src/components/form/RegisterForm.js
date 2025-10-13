@@ -6,7 +6,7 @@ import InputBase from "@/components/input/InputBase";
 import InputPassword from "@/components/input/InputPassword";
 import ButtonBase from "../ButtonBase";
 import { ROUTES } from "@/helpers/routs";
-import { register } from "@/api/auth";
+import { register } from "@/api/authentication";
 import {
   validateEmail,
   validateName,
@@ -31,6 +31,7 @@ export default function RegisterForm() {
       const username = String(form.get("name"));
       const email = String(form.get("email"));
       const password = String(form.get("password"));
+      console.log(33);
 
       await register(username, email, password);
       router.push(ROUTES.WELCOME);

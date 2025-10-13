@@ -1,10 +1,10 @@
 import express from 'express';
-import { getMe } from '../controllers/users.js';
+import { getUser } from '../controllers/users.js';
 import jwt from 'jsonwebtoken';
 
 const router = express.Router();
 
-function isAuth(req, res, next) {
+function isAuthenticated(req, res, next) {
   const token = req.cookies?.accessToken;
   if (!token) return res.status(401).json({ message: 'Unauthorized' });
   try {
@@ -15,10 +15,6 @@ function isAuth(req, res, next) {
   }
 }
 
-router.get('/', isAuth, (req, res) => {
-  res.json({ message: 'User list' });
-});
-
-router.get('/me', isAuth, getMe);
+router.get('/me', isAuthenticated, getUser);
 
 export default router;

@@ -1,16 +1,9 @@
 import request from 'supertest';
 import { describe, it, expect } from 'vitest';
 import { app } from './setup.js';
-import { signToken } from '../helpers/auth.js';
+import { getCsrf } from './helpers/getCsrf.js';
+import jwt from 'jsonwebtoken';
 import User from '../models/user.js';
-
-async function getCsrf(agent) {
-  const res = await agent.get('/api/auth/login');
-  const cookies = res.headers['set-cookie'] || [];
-  const raw = cookies.find((c) => c.startsWith('XSRF-TOKEN=')) || '';
-  const token = raw.split('XSRF-TOKEN=')[1]?.split(';')[0];
-  return token || '';
-}
 
 describe('Users routes', () => {
   it('GET /api/users/me returns current user', async () => {
@@ -22,7 +15,9 @@ describe('Users routes', () => {
       email: 'jane@example.com',
       passwordHash: 'hash',
     });
-    const token = signToken(me);
+    const token = jwt.sign({ sub: String(me._id), email: me.email }, process.env.JWT_SECRET, {
+      expiresIn: process.env.JWT_EXPIRES_IN || '30m',
+    });
 
     const res = await agent
       .get('/api/users/me')

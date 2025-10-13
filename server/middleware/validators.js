@@ -1,19 +1,3 @@
-import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
-
-export const signToken = (user) => {
-  const secret = process.env.JWT_SECRET;
-  if (!secret) {
-    throw new Error('JWT_SECRET is not set');
-  }
-  const expiresIn = process.env.JWT_EXPIRES_IN || '30m';
-  return jwt.sign({ sub: String(user._id), email: user.email }, secret, { expiresIn });
-};
-
-export const passwordCompare = (password, hash) => bcrypt.compare(password, hash);
-
-export const hashPassword = (password, saltRounds = 10) => bcrypt.hash(password, saltRounds);
-
 export const isValidEmail = (email) =>
   typeof email === 'string' && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 

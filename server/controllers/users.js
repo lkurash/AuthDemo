@@ -1,21 +1,27 @@
-import User from '../models/user.js';
+import { AuthenticatedError } from '../services/errors.js';
+import UserService from '../services/userService.js';
 
-export const getMe = async (req, res) => {
+export const getUser = async (req, res) => {
+  const userService = new UserService();
+  const { sub } = req.user || {};
   try {
-    const { sub } = req.user || {};
-    if (!sub) return res.status(401).json({ message: 'Unauthorized' });
+    const result = await userService.getUserById(sub);
+    if (result.isSuccess) {
+      const { user } = result;
+      return res.json({
+        id: String(user._id),
+        email: user.email,
+        username: user.username,
+        createdAt: user.createdAt,
+      });
+    }
 
-    const user = await User.findById(sub).lean();
-    if (!user) return res.status(404).json({ message: 'User not found' });
+    if (result.isError && result.error instanceof AuthenticatedError) {
+      return res.status(401).json({ message: 'Unauthorized' });
+    }
 
-    return res.json({
-      id: String(user._id),
-      email: user.email,
-      username: user.username,
-      createdAt: user.createdAt,
-    });
+    return res.status(404).json({ message: 'User not found' });
   } catch (err) {
-    console.error('getMe error:', err);
-    return res.status(500).json({ message: 'Internal server error' });
+    return res.status(500).json({ message: err.message || 'Internal server error' });
   }
 };

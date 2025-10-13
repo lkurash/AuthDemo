@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { ROUTES } from "@/helpers/routs";
-import { login } from "@/api/auth";
+import { login } from "@/api/authentication";
 import InputBase from "@/components/input/InputBase";
 import InputPassword from "@/components/input/InputPassword";
 import ButtonBase from "@/components/ButtonBase";

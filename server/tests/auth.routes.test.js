@@ -1,16 +1,9 @@
 import request from 'supertest';
 import { describe, it, expect } from 'vitest';
 import { app } from './setup.js';
+import { getCsrf } from './helpers/getCsrf.js';
 import User from '../models/user.js';
-import { hashPassword } from '../helpers/auth.js';
-
-async function getCsrf(agent) {
-  const res = await agent.get('/api/auth/login');
-  const cookies = res.headers['set-cookie'] || [];
-  const raw = cookies.find((c) => c.startsWith('XSRF-TOKEN=')) || '';
-  const token = raw.split('XSRF-TOKEN=')[1]?.split(';')[0];
-  return token || '';
-}
+import bcrypt from 'bcryptjs';
 
 describe('Auth routes', () => {
   it('register -> login -> logout flow', async () => {
@@ -45,7 +38,7 @@ describe('Auth routes', () => {
     const agent = request.agent(app);
     const csrf = await getCsrf(agent);
 
-    const passwordHash = await hashPassword('pass123');
+    const passwordHash = await bcrypt.hash('pass123', 10);
     await User.create({ username: 'Bob', email: 'bob@example.com', passwordHash });
 
     const res = await agent

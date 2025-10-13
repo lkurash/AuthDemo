@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { ROUTES } from "@/helpers/routs";
 import { getUser } from "@/api/user";
-import { logout } from "@/api/auth";
+import { logout } from "@/api/authentication";
 import LinkBase from "@/components/LinkBase";
 import ButtonBase from "@/components/ButtonBase";
 import Skeleton from "@/components/Skeleton";
