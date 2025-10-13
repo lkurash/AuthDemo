@@ -4,35 +4,24 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { ROUTES } from "@/helpers/routs";
-import { getUser } from "@/api/user";
 import { logout } from "@/api/authentication";
+import useOptionalUser from "@/hooks/useOptionalUser";
 
 export default function Header() {
-  const [user, setUser] = useState(null);
-  const [loaded, setLoaded] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
+  const { user, loading, setUser, fetchUser } = useOptionalUser({
+    watch: pathname,
+  });
+  const [optionalUser, setOptionalUser] = useState(null);
 
   useEffect(() => {
-    let mounted = true;
-    setLoaded(false);
-    getUser()
-      .then((user) => {
-        if (mounted) setUser(user);
-      })
-      .catch(() => {
-        if (mounted) setUser(null);
-      })
-      .finally(() => {
-        if (mounted) setLoaded(true);
-      });
-    return () => {
-      mounted = false;
-    };
-  }, [pathname]);
+    setOptionalUser(user);
+  }, [user]);
 
   const handleLogout = async () => {
     await logout();
+    setOptionalUser(null);
     setUser(null);
     router.push(ROUTES.LOGIN);
   };
@@ -46,9 +35,9 @@ export default function Header() {
           </Link>
         </div>
         <nav className="nav">
-          {!loaded ? (
+          {loading ? (
             <div className="nav-loading" aria-hidden="true" />
-          ) : !user ? (
+          ) : !optionalUser ? (
             <>
               <Link href={ROUTES.LOGIN} className="nav-link btn small">
                 Sign in

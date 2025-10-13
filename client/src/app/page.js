@@ -3,19 +3,10 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ROUTES } from "@/helpers/routs";
-import { getUser } from "@/api/user";
+import useOptionalUser from "@/hooks/useOptionalUser";
 
 export default function Page() {
-  const [user, setUser] = useState(null);
-  const [loaded, setLoaded] = useState(false);
-
-  useEffect(() => {
-    setLoaded(false);
-    getUser()
-      .then((user) => setUser(user))
-      .catch(() => setUser(null))
-      .finally(() => setLoaded(true));
-  }, []);
+  const { user, loading } = useOptionalUser();
 
   return (
     <div className="main container">
@@ -27,7 +18,7 @@ export default function Page() {
             JWT, cookies and clear validation.
           </p>
           <div className="welcome-actions">
-            {!loaded ? null : user ? (
+            {loading ? null : user ? (
               <>
                 <Link className="btn" href={ROUTES.WELCOME}>
                   Visit Welcome Page

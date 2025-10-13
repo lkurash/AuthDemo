@@ -7,16 +7,17 @@ import LinkBase from "@/components/LinkBase";
 import RegisterForm from "@/components/form/RegisterForm";
 import { ROUTES } from "@/helpers/routs";
 import { useRouter } from "next/navigation";
-import { getUser } from "@/api/user";
+import useOptionalUser from "@/hooks/useOptionalUser";
 
 export default function RegisterPage() {
   const router = useRouter();
+  const { user } = useOptionalUser();
 
   useEffect(() => {
-    getUser()
-      .then(() => router.replace(ROUTES.WELCOME))
-      .catch(() => {});
-  }, []);
+    if (user) {
+      router.replace(ROUTES.WELCOME);
+    }
+  }, [user, router]);
 
   return (
     <CardBase
