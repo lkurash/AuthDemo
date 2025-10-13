@@ -13,7 +13,7 @@ This repository is a ready example of a simple and secure authentication mechani
 
 ## What's inside (key points)
 
-# API (short)
+### API (short)
 
 Base prefix: /api
 
@@ -28,7 +28,7 @@ Session: JWT lifetime is 30 minutes; after expiry the user must re-authenticate.
 
 ---
 
-# Security and validation
+### Security and validation
 
 - Passwords are stored only hashed (bcrypt).
 - Validation on the client (email format, password) and on the server (duplicate checks).
